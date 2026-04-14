@@ -5,6 +5,8 @@ import exp2.s4.peliculas.servicios.PeliculaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import exp2.s4.peliculas.dto.PeliculaRequest;
+
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -40,5 +42,24 @@ public class PeliculaController {
             );
         }
         return ResponseEntity.ok(pelicula);
+    }
+
+    // ===================== POST =====================
+ 
+    // POST: http://localhost:8080/peliculas
+    // Body JSON: { "titulo": "...", "anno": 2000, "idDirector": 1, "idGenero": 2, "sinopsis": "..." }
+    @PostMapping
+    public ResponseEntity<?> crearPelicula(@RequestBody PeliculaRequest req) {
+        PeliculaDTO creada = service.crear(req);
+        if (creada == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                Map.of(
+                    "timestamp", LocalDateTime.now().toString(),
+                    "status", 400,
+                    "errores", Map.of("referencia", "El idDirector o idGenero indicado no existe en la base de datos.")
+                )
+            );
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(creada);
     }
 }
