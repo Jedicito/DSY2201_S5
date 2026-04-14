@@ -63,4 +63,28 @@ public class PeliculaService {
         Pelicula guardada = peliculaRepository.save(nueva);
         return new PeliculaDTO(guardada);
     }
+
+        // --- Modificar ---
+    public PeliculaDTO modificar(int id, PeliculaRequest req) {
+        Optional<Pelicula> resultado = peliculaRepository.findById(id);
+        if (resultado.isEmpty()) {
+            return null;
+        }
+ 
+        Optional<Director> director = directorRepository.findById(req.getIdDirector());
+        Optional<Genero>   genero   = generoRepository.findById(req.getIdGenero());
+        if (director.isEmpty() || genero.isEmpty()) {
+            return null;
+        }
+ 
+        Pelicula pelicula = resultado.get();
+        pelicula.setTitulo(req.getTitulo());
+        pelicula.setAnno(req.getAnno());
+        pelicula.setDirector(director.get());
+        pelicula.setGenero(genero.get());
+        pelicula.setSinopsis(req.getSinopsis());
+ 
+        Pelicula actualizada = peliculaRepository.save(pelicula);
+        return new PeliculaDTO(actualizada);
+    }
 }

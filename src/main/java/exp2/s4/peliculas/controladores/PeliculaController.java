@@ -62,4 +62,25 @@ public class PeliculaController {
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(creada);
     }
+
+// ===================== PUT =====================
+ 
+    // PUT: http://localhost:8080/peliculas/1
+    // Body JSON: { "titulo": "...", "anno": 2000, "idDirector": 1, "idGenero": 2, "sinopsis": "..." }
+    @PutMapping("/{id}")
+    public ResponseEntity<?> modificarPelicula(@PathVariable int id, @RequestBody PeliculaRequest req) {
+        PeliculaDTO modificada = service.modificar(id, req);
+        if (modificada == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                Map.of(
+                    "timestamp", LocalDateTime.now().toString(),
+                    "status", 404,
+                    "errores", Map.of("id", "No se encontró una película con ese ID, o el idDirector/idGenero no existe.")
+                )
+            );
+        }
+        return ResponseEntity.ok(modificada);
+    }
+
+
 }
