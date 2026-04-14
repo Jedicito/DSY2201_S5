@@ -82,5 +82,29 @@ public class PeliculaController {
         return ResponseEntity.ok(modificada);
     }
 
+    // ===================== DELETE =====================
+ 
+    // DELETE: http://localhost:8080/peliculas/1
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> eliminarPelicula(@PathVariable int id) {
+        boolean eliminada = service.eliminar(id);
+        if (!eliminada) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                Map.of(
+                    "timestamp", LocalDateTime.now().toString(),
+                    "status", 404,
+                    "errores", Map.of("id", "No se encontró una película con ese ID.")
+                )
+            );
+        }
+        return ResponseEntity.ok(
+            Map.of(
+                "timestamp", LocalDateTime.now().toString(),
+                "status", 200,
+                "mensaje", "Película con ID " + id + " eliminada correctamente."
+            )
+        );
+    }
+
 
 }

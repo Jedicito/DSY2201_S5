@@ -87,4 +87,16 @@ public class PeliculaService {
         Pelicula actualizada = peliculaRepository.save(pelicula);
         return new PeliculaDTO(actualizada);
     }
+
+        // --- Eliminar ---
+    public boolean eliminar(int id) {
+        if (!peliculaRepository.existsById(id)) {
+            return false;
+        }
+        peliculaRepository.deleteById(id);
+        return true;
+    }
+
+    
+
 }
